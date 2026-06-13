@@ -16,10 +16,7 @@
                         $total += $subtotal;
                     ?>
                         <div class="row align-items-center mb-4 pb-3 border-bottom">
-                            <div class="col-3 col-md-2">
-                                <img src="/HuynhVanGiang-4733/uploads/<?php echo $item['image']; ?>" class="img-fluid rounded-3 bg-light p-1" style="max-height: 70px; object-fit: contain;">
-                            </div>
-                            <div class="col-9 col-md-4">
+                            <div class="col-12 col-md-6">
                                 <h6 class="fw-bold mb-1 text-dark"><?php echo htmlspecialchars($item['name']); ?></h6>
                                 <span class="text-muted small">Đơn giá: <?php echo number_format($item['price'], 0, ',', '.'); ?>đ</span>
                             </div>

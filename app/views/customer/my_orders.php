@@ -24,8 +24,13 @@
                             <td><?php echo number_format($order->total_price, 0, ',', '.'); ?>đ</td>
                             <td>
                                 <?php 
-                                    $badge = ($order->status == 'Chờ xử lý') ? 'bg-warning text-dark' : 
-                                             (($order->status == 'Đã giao') ? 'bg-success' : 'bg-secondary');
+                                    $badge = 'bg-secondary';
+                                    if ($order->status == 'Chờ xử lý') $badge = 'bg-warning text-dark';
+                                    elseif ($order->status == 'Đang giao') $badge = 'bg-info text-dark';
+                                    elseif ($order->status == 'Đã giao') $badge = 'bg-success';
+                                    elseif ($order->status == 'Yêu cầu trả hàng') $badge = 'bg-dark text-white';
+                                    elseif ($order->status == 'Đã trả hàng') $badge = 'bg-secondary';
+                                    elseif ($order->status == 'Đã hủy') $badge = 'bg-danger';
                                 ?>
                                 <span class="badge <?php echo $badge; ?>"><?php echo $order->status; ?></span>
                             </td>
@@ -36,9 +41,16 @@
                                        onclick="return confirm('Bạn chắc chắn muốn hủy đơn hàng này?')">
                                        Hủy đơn
                                     </a>
+                                <?php elseif ($order->status == 'Đang giao'): ?>
+                                    <a href="/HuynhVanGiang-4733/Order/confirmDelivery/<?php echo $order->id; ?>" 
+                                       class="btn btn-sm btn-success"
+                                       onclick="return confirm('Xác nhận bạn đã nhận được hàng?')">
+                                       Đã nhận hàng
+                                    </a>
                                 <?php elseif ($order->status == 'Đã giao'): ?>
                                     <a href="/HuynhVanGiang-4733/Order/requestReturn/<?php echo $order->id; ?>" 
-                                       class="btn btn-sm btn-warning">
+                                       class="btn btn-sm btn-warning"
+                                       onclick="return confirm('Bạn có chắc chắn muốn yêu cầu trả hàng cho đơn này không?')">
                                        Trả hàng
                                     </a>
                                 <?php endif; ?>

@@ -15,16 +15,7 @@
                          onmouseover="this.style.transform='減cale(1.02)'; this.style.boxShadow='0 1rem 3rem rgba(0,0,0,0.08)';"
                          onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 .125rem .25rem rgba(0,0,0,0.075)';">
                         
-                        <div class="d-flex align-items-center justify-content-center my-3" style="height: 180px;">
-                            <?php if (!empty($pro->image)): ?>
-                                <img src="/HuynhVanGiang-4733/uploads/<?php echo $pro->image; ?>" 
-                                     class="img-fluid rounded-3" style="max-height: 100%; object-fit: contain;" 
-                                     alt="<?php echo htmlspecialchars($pro->name); ?>">
-                            <?php else: ?>
-                                <img src="/HuynhVanGiang-4733/public/images/no_image.png" 
-                                     class="img-fluid rounded-3" style="max-height: 100%; object-fit: contain;" alt="No image">
-                            <?php endif; ?>
-                        </div>
+
 
                         <div class="card-body d-flex flex-column p-2">
                             <h4 class="fw-bold text-dark mb-1" style="font-size: 1.35rem;"><?php echo htmlspecialchars($pro->name); ?></h4>

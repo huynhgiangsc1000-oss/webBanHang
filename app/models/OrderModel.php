@@ -88,8 +88,8 @@ class OrderModel
     }
     public function getOrderDetails($order_id)
     {
-    // JOIN bảng order_details với bảng product để lấy tên sản phẩm và hình ảnh
-    $query = "SELECT od.*, p.name AS product_name, p.image AS product_image 
+    // JOIN bảng order_details với bảng product để lấy tên sản phẩm
+    $query = "SELECT od.*, p.name AS product_name 
               FROM order_details od
               JOIN product p ON od.product_id = p.id
               WHERE od.order_id = :order_id";
@@ -146,5 +146,29 @@ public function getOrderById($order_id) {
     $stmt = $this->conn->prepare("SELECT * FROM orders WHERE id = ?");
     $stmt->execute([$order_id]);
     return $stmt->fetch(PDO::FETCH_OBJ);
+}
+// Trong OrderModel.php
+public function deleteOrder($order_id) {
+    try {
+        $this->conn->beginTransaction();
+        
+        // 1. Xóa các chi tiết đơn hàng trước (foreign key constraint)
+        $queryDetails = "DELETE FROM order_details WHERE order_id = :order_id";
+        $stmtDetails = $this->conn->prepare($queryDetails);
+        $stmtDetails->bindParam(':order_id', $order_id);
+        $stmtDetails->execute();
+        
+        // 2. Xóa đơn hàng
+        $queryOrder = "DELETE FROM orders WHERE id = :id";
+        $stmtOrder = $this->conn->prepare($queryOrder);
+        $stmtOrder->bindParam(':id', $order_id);
+        $success = $stmtOrder->execute();
+        
+        $this->conn->commit();
+        return $success;
+    } catch (Exception $e) {
+        $this->conn->rollBack();
+        return false;
+    }
 }
 }

@@ -10,8 +10,7 @@ class ProductModel
     }
     public function getProducts()
     {
-        // Giữ nguyên lấy thêm cột p.image và liên kết danh mục
-        $query = "SELECT p.id, p.name, p.description, p.price, p.image, c.name as category_name 
+        $query = "SELECT p.id, p.name, p.description, p.price, c.name as category_name 
                   FROM " . $this->table_name . " p 
                   LEFT JOIN category c ON p.category_id = c.id";
         $stmt = $this->conn->prepare($query);
@@ -28,7 +27,7 @@ class ProductModel
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function addProduct($name, $description, $price, $category_id, $image)
+    public function addProduct($name, $description, $price, $category_id)
     {
         $errors = [];
         if (empty($name)) $errors['name'] = 'Tên sản phẩm không được để trống';
@@ -37,37 +36,43 @@ class ProductModel
         
         if (count($errors) > 0) return $errors;
 
-        $query = "INSERT INTO " . $this->table_name . " (name, description, price, category_id, image) 
-                  VALUES (:name, :description, :price, :category_id, :image)";
+        $query = "INSERT INTO " . $this->table_name . " (name, description, price, category_id) 
+                  VALUES (:name, :description, :price, :category_id)";
         $stmt = $this->conn->prepare($query);
 
-        // ĐÃ SỬA: Loại bỏ htmlspecialchars để lưu chuỗi gốc tiếng Việt chuẩn vào CSDL
-        $name = strip_tags(trim($name));
-        $description = strip_tags(trim($description));
-        $price = strip_tags(trim($price));
-        $category_id = strip_tags(trim($category_id));
-        $image = strip_tags(trim($image));
+        // Bảo mật: Sử dụng cả htmlspecialchars và strip_tags để làm sạch dữ liệu
+        $name = htmlspecialchars(strip_tags(trim($name)));
+        $description = htmlspecialchars(strip_tags(trim($description)));
+        $price = htmlspecialchars(strip_tags(trim($price)));
+        $category_id = htmlspecialchars(strip_tags(trim($category_id)));
 
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':price', $price);
         $stmt->bindParam(':category_id', $category_id);
-        $stmt->bindParam(':image', $image);
 
         return $stmt->execute() ? true : false;
     }
 
    // Thêm vào ProductModel.php
-public function updateProduct($id, $name, $description, $price, $category_id, $image, $status)
+public function updateProduct($id, $name, $description, $price, $category_id, $status)
 {
     $query = "UPDATE " . $this->table_name . " 
               SET name = :name, description = :description, price = :price, 
-                  category_id = :category_id, image = :image, status = :status 
+                  category_id = :category_id, status = :status 
               WHERE id = :id";
     $stmt = $this->conn->prepare($query);
+
+    // Bảo mật: Làm sạch dữ liệu trước khi lưu
+    $name = htmlspecialchars(strip_tags(trim($name)));
+    $description = htmlspecialchars(strip_tags(trim($description)));
+    $price = htmlspecialchars(strip_tags(trim($price)));
+    $category_id = htmlspecialchars(strip_tags(trim($category_id)));
+    $status = htmlspecialchars(strip_tags(trim($status)));
+
     return $stmt->execute([
         ':name' => $name, ':description' => $description, ':price' => $price,
-        ':category_id' => $category_id, ':image' => $image, ':status' => $status, ':id' => $id
+        ':category_id' => $category_id, ':status' => $status, ':id' => $id
     ]);
 }
     public function deleteProduct($id)

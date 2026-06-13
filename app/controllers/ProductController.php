@@ -79,15 +79,7 @@ class ProductController
             $price = $_POST['price'] ?? '';
             $category_id = $_POST['category_id'] ?? null;
             
-            // Xử lý Upload ảnh mới
-            $image = '';
-            if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-                $dir = 'uploads/';
-                $image = time() . '_' . basename($_FILES['image']['name']);
-                move_uploaded_file($_FILES['image']['tmp_name'], $dir . $image);
-            }
-
-            $result = $this->productModel->addProduct($name, $description, $price, $category_id, $image);
+            $result = $this->productModel->addProduct($name, $description, $price, $category_id);
 
             if (is_array($result)) {
                 $errors = $result;
@@ -132,17 +124,9 @@ class ProductController
             $price = $_POST['price'];
             $category_id = $_POST['category_id']; // Phải lấy từ form
             $status = $_POST['status'];
-            $image = $_POST['existing_image'] ?? '';
-    
-            // Xử lý upload ảnh
-            if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-                $dir = 'uploads/';
-                $image = time() . '_' . basename($_FILES['image']['name']);
-                move_uploaded_file($_FILES['image']['tmp_name'], $dir . $image);
-            }
     
             // Gọi model cập nhật
-            $edit = $this->productModel->updateProduct($id, $name, $description, $price, $category_id, $image, $status);
+            $edit = $this->productModel->updateProduct($id, $name, $description, $price, $category_id, $status);
     
             if ($edit) {
                 header('Location: /HuynhVanGiang-4733/Product');

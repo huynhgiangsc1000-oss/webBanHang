@@ -59,6 +59,65 @@ class AccountController
     }
 
     /**
+     * 1b. API ĐĂNG NHẬP (Lấy Token/JWT giả lập & thiết lập Session)
+     * POST /account/checkLogin
+     */
+    public function checkLogin()
+    {
+        // Nhận dữ liệu JSON từ body request hoặc $_POST thông thường
+        $body = json_decode(file_get_contents('php://input'), true);
+        
+        $username = $body['username'] ?? $_POST['username'] ?? '';
+        $password = $body['password'] ?? $_POST['password'] ?? '';
+
+        if (empty($username) || empty($password)) {
+            header('Content-Type: application/json; charset=utf-8');
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Tên đăng nhập và mật khẩu không được để trống.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit();
+        }
+
+        $user = $this->accountModel->login($username, $password);
+
+        header('Content-Type: application/json; charset=utf-8');
+        if ($user) {
+            // Đăng nhập thành công -> Thiết lập session để các hành động MVC khác hoạt động đồng bộ
+            $_SESSION['user_id'] = $user->id;
+            $_SESSION['username'] = $user->username;
+            $_SESSION['user_role'] = $user->role;
+
+            // Tạo mã token JWT giả lập
+            $dummyToken = base64_encode(json_encode([
+                'id' => $user->id,
+                'username' => $user->username,
+                'role' => $user->role,
+                'exp' => time() + 3600
+            ]));
+
+            echo json_encode([
+                'success' => true,
+                'message' => 'Đăng nhập thành công!',
+                'token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' . $dummyToken . '.dummySignature',
+                'user' => [
+                    'id' => $user->id,
+                    'username' => $user->username,
+                    'role' => $user->role
+                ]
+            ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        } else {
+            http_response_code(401);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Tên đăng nhập hoặc mật khẩu không chính xác.'
+            ], JSON_UNESCAPED_UNICODE);
+        }
+        exit();
+    }
+
+    /**
      * 2. XỬ LÝ ĐĂNG KÝ
      */
    // app/controllers/AccountController.php

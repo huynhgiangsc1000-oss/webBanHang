@@ -1,0 +1,461 @@
+{
+	"info": {
+		"name": "NTECH STORE API TEST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Get Danh sách sản phẩm",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Get Danh sách Category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Post Thêm mới 1 danh mục",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Danh mục Test Mới\",\n    \"description\": \"Đây là danh mục dùng để test\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. Post Thêm mới 1 sản phẩm",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Sản phẩm Test Hoàn Hảo\",\n    \"description\": \"Mô tả cho sản phẩm test\",\n    \"price\": 500000,\n    \"category_id\": 1,\n    \"stock\": 50\n}"
+				},
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5. Post Thêm mới 1 sản phẩm (CÓ LỖI)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"\",\n    \"price\": -500,\n    \"stock\": -10\n}"
+				},
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6. Put Cập nhật thông tin sản phẩm",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Sản phẩm đã được Update\",\n    \"description\": \"Mô tả sau khi update\",\n    \"price\": 450000,\n    \"category_id\": 1,\n    \"stock\": 100\n}"
+				},
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/products/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "7. Put Cập nhật thông tin sản phẩm (CÓ LỖI)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Sản phẩm Update Lỗi\",\n    \"price\": \"Chữ không phải số\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/products/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "8. Delete 1 sản phẩm",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/products/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "9. Delete 1 danh mục",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/categories/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"categories",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10. Post Đăng nhập Admin (Lấy JWT)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/account/checkLogin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"account",
+						"checkLogin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "11. Post Đăng nhập User (Lấy JWT)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"user\",\n    \"password\": \"123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/account/checkLogin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"account",
+						"checkLogin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "12. Get Thông tin chi tiết 1 đơn hàng",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/orders/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"orders",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "13. Post Thêm 1 đơn hàng (Nhiều SP)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"shipping_name\": \"Nguyễn Văn A\",\n    \"shipping_address\": \"123 Đường ABC, Quận XYZ\",\n    \"shipping_phone\": \"0987654321\",\n    \"payment_method\": \"COD\",\n    \"products\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 2\n        },\n        {\n            \"product_id\": 2,\n            \"quantity\": 1\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "14. Post Thêm 1 đơn hàng (LỖI SP KHÔNG TỒN TẠI)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"shipping_name\": \"Nguyễn Văn B\",\n    \"shipping_address\": \"456 Đường DEF\",\n    \"shipping_phone\": \"0123456789\",\n    \"payment_method\": \"COD\",\n    \"products\": [\n        {\n            \"product_id\": 999999,\n            \"quantity\": 1\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "15. Put Sửa trạng thái đơn hàng (Chuẩn bị -> Đang giao)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"Đang giao hàng\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/orders/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"orders",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "16. Put Sửa trạng thái đơn hàng (LỖI LÙI TRẠNG THÁI)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"Chờ xác nhận\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:808/HuynhVanGiang-4733/api/orders/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "808",
+					"path": [
+						"HuynhVanGiang-4733",
+						"api",
+						"orders",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

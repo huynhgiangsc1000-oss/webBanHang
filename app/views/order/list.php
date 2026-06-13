@@ -2,7 +2,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold text-dark mb-1">Quản Lý Đơn Hàng Hệ Thống</h2>
-            <p class="text-muted small mb-0">Xem lịch sử đặt hàng và xử lý quy trình vận đơn khách hàng.</p>
+            <p class="text-muted small mb-0">Danh sách đơn hàng và thao tác xử lý hệ thống.</p>
         </div>
         <a href="/HuynhVanGiang-4733/Order" class="btn btn-outline-secondary rounded-pill px-4">
             <i class="fa-solid fa-chart-pie me-2"></i>Xem Thống Kê
@@ -18,52 +18,62 @@
                         <th class="py-3">Tên Khách hàng</th>
                         <th class="py-3">Ngày đặt đơn</th>
                         <th class="py-3">Tổng giá trị</th>
-                        <th class="py-3">Trạng thái hiện tại</th>
+                        <th class="py-3">Trạng thái</th>
                         <th class="py-3 text-end pe-4">Thao tác xử lý</th>
                     </tr>
                 </thead>
                 <tbody class="small text-dark">
                     <?php if (empty($orders)): ?>
+                        <tr><td colspan="6" class="text-center py-5 text-muted">Chưa có đơn hàng nào!</td></tr>
+                    <?php else: foreach ($orders as $order): ?>
                         <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">Chưa có đơn hàng nào được đặt trong hệ thống!</td>
-                        </tr>
-                    <?php else: ?>
-                        <?php foreach ($orders as $order): ?>
-                            <tr>
-                                <td class="ps-4">
-                                    <a href="javascript:void(0);" onclick="showOrderDetails(<?php echo $order->id; ?>)" class="fw-bold text-primary text-decoration-none">
-                                        <i class="fa-solid fa-eye me-1"></i>#ORD-<?php echo $order->id; ?>
-                                    </a>
-                                </td>
-                                <td class="fw-semibold"><?php echo htmlspecialchars($order->customer_name); ?></td>
-                                <td class="text-muted"><?php echo date('d/m/Y H:i', strtotime($order->created_at)); ?></td>
-                                <td class="fw-bold text-danger"><?php echo number_format($order->total_price, 0, ',', '.'); ?>đ</td>
-                                <td>
-                                    <?php if ($order->status == 'Chờ xử lý'): ?>
-                                        <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill">Chờ xử lý</span>
-                                    <?php elseif ($order->status == 'Đang giao'): ?>
-                                        <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill">Đang giao</span>
-                                    <?php elseif ($order->status == 'Đã giao'): ?>
-                                        <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">Đã giao</span>
-                                    <?php else: ?>
-                                        <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill">Đã hủy</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="text-end pe-4">
-                                    <form action="/HuynhVanGiang-4733/Order/updateStatus" method="POST" class="d-inline-flex align-items-center gap-2">
+                            <td class="ps-4">
+                                <a href="javascript:void(0);" onclick="showOrderDetails(<?php echo $order->id; ?>)" class="fw-bold text-primary text-decoration-none">
+                                    #ORD-<?php echo $order->id; ?>
+                                </a>
+                            </td>
+                            <td class="fw-semibold"><?php echo htmlspecialchars($order->customer_name); ?></td>
+                            <td class="text-muted"><?php echo date('d/m/Y H:i', strtotime($order->created_at)); ?></td>
+                            <td class="fw-bold text-danger"><?php echo number_format($order->total_price, 0, ',', '.'); ?>đ</td>
+                            <td>
+                                <?php 
+                                    $badge = 'bg-secondary';
+                                    if ($order->status == 'Chờ xử lý') $badge = 'bg-warning text-warning';
+                                    elseif ($order->status == 'Đang giao') $badge = 'bg-info text-info';
+                                    elseif ($order->status == 'Đã giao') $badge = 'bg-success text-success';
+                                    elseif ($order->status == 'Đã hủy') $badge = 'bg-danger text-danger';
+                                    elseif ($order->status == 'Yêu cầu trả hàng') $badge = 'bg-dark text-dark';
+                                    elseif ($order->status == 'Đã trả hàng') $badge = 'bg-secondary text-secondary';
+                                ?>
+                                <span class="badge <?php echo $badge; ?> bg-opacity-10 px-3 py-2 rounded-pill">
+                                    <?php echo $order->status; ?>
+                                </span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <form action="/HuynhVanGiang-4733/Order/updateStatus" method="POST" class="d-flex gap-1">
                                         <input type="hidden" name="order_id" value="<?php echo $order->id; ?>">
-                                        <select name="status" class="form-select form-select-sm rounded-3" style="width: 130px;">
+                                        <select name="status" class="form-select form-select-sm rounded-3">
                                             <option value="Chờ xử lý" <?php echo $order->status == 'Chờ xử lý' ? 'selected' : ''; ?>>Chờ xử lý</option>
                                             <option value="Đang giao" <?php echo $order->status == 'Đang giao' ? 'selected' : ''; ?>>Đang giao</option>
                                             <option value="Đã giao" <?php echo $order->status == 'Đã giao' ? 'selected' : ''; ?>>Đã giao</option>
+                                            <option value="Yêu cầu trả hàng" <?php echo $order->status == 'Yêu cầu trả hàng' ? 'selected' : ''; ?>>Yêu cầu trả hàng</option>
+                                            <option value="Đã trả hàng" <?php echo $order->status == 'Đã trả hàng' ? 'selected' : ''; ?>>Đã trả hàng</option>
                                             <option value="Đã hủy" <?php echo $order->status == 'Đã hủy' ? 'selected' : ''; ?>>Đã hủy</option>
                                         </select>
-                                        <button type="submit" class="btn btn-sm btn-dark rounded-3 px-2.5">Duyệt</button>
+                                        <button type="submit" class="btn btn-sm btn-dark">Duyệt</button>
                                     </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+
+                                         <form action="/HuynhVanGiang-4733/Order/deleteOrder" method="POST" onsubmit="return confirmDeleteOrder('<?php echo $order->status; ?>');">
+                                             <input type="hidden" name="order_id" value="<?php echo $order->id; ?>">
+                                             <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                 <i class="fa-solid fa-trash"></i>
+                                             </button>
+                                         </form>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; endif; ?>
                 </tbody>
             </table>
         </div>
@@ -82,7 +92,6 @@
                     <table class="table align-middle">
                         <thead class="text-secondary small">
                             <tr>
-                                <th>Hình ảnh</th>
                                 <th>Tên Sản phẩm</th>
                                 <th class="text-center">Số lượng</th>
                                 <th class="text-end">Đơn giá lúc mua</th>
@@ -102,6 +111,15 @@
 </div>
 
 <script>
+function confirmDeleteOrder(status) {
+    if (status === 'Đã hủy') {
+        return confirm('Xóa vĩnh viễn đơn này?');
+    } else {
+        alert('Không thể xóa đơn hàng khi trạng thái đơn hàng là Chờ duyệt, Đang giao, Đã giao.');
+        return false;
+    }
+}
+
 function showOrderDetails(orderId) {
     // Sét tiêu đề popup kèm mã đơn hàng
     document.getElementById('modalTitle').innerText = 'Chi Tiết Sản Phẩm Đã Mua (Đơn hàng #' + orderId + ')';
@@ -134,12 +152,8 @@ function showOrderDetails(orderId) {
                 const formattedPrice = price.toLocaleString('vi-VN') + 'đ';
                 const formattedSubtotal = subtotal.toLocaleString('vi-VN') + 'đ';
                 
-                // Đường dẫn ảnh sản phẩm (Giang tự chỉnh lại thư mục chứa ảnh nếu cần nhé)
-                const imgUrl = item.product_image ? '/HuynhVanGiang-4733/public/uploads/' + item.product_image : 'https://placehold.co/60x60?text=No+Image';
-
-                const row = `
+                 const row = `
                     <tr>
-                        <td><img src="${imgUrl}" class="rounded border" style="width: 50px; height: 50px; object-fit: cover;" onerror="this.src='https://placehold.co/50x60?text=Product'"></td>
                         <td class="fw-semibold">${item.product_name}</td>
                         <td class="text-center fw-bold">${quantity}</td>
                         <td class="text-end text-muted">${formattedPrice}</td>

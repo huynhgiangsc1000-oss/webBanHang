@@ -1,8 +1,9 @@
 <?php
 require_once('app/config/database.php');
 require_once('app/models/CategoryModel.php');
+require_once('app/controllers/BaseApiController.php');
 
-class CategoryApiController
+class CategoryApiController extends BaseApiController
 {
     private $categoryModel;
     private $db;
@@ -16,16 +17,6 @@ class CategoryApiController
         $this->categoryModel = new CategoryModel($this->db);
     }
 
-    /**
-     * Hàm trợ giúp: Trả về JSON và kết thúc
-     */
-    private function json($data, $status = 200)
-    {
-        http_response_code($status);
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        exit();
-    }
 
     /**
      * GET /CategoryApi/index
@@ -34,6 +25,9 @@ class CategoryApiController
      */
     public function index()
     {
+        // Yêu cầu xác thực JWT cho người dùng đã đăng nhập
+        $this->protect();
+
         $categories = $this->categoryModel->getCategories();
         $this->json([
             'success' => true,
@@ -47,6 +41,9 @@ class CategoryApiController
      */
     public function store()
     {
+        // Yêu cầu xác thực JWT với vai trò admin
+        $this->protect('admin');
+
         $body = json_decode(file_get_contents('php://input'), true);
 
         if (!$body) {
@@ -87,6 +84,9 @@ class CategoryApiController
      */
     public function destroy($id)
     {
+        // Yêu cầu xác thực JWT với vai trò admin
+        $this->protect('admin');
+
         $category = $this->categoryModel->getCategoryById($id);
         if (!$category) {
             $this->json([

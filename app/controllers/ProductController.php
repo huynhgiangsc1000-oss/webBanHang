@@ -14,6 +14,13 @@ class ProductController
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+
+        // Yêu cầu đăng nhập mới xem được trang danh sách sản phẩm
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /HuynhVanGiang-4733/Account/login');
+            exit();
+        }
+
         $this->db = (new Database())->getConnection();
         $this->productModel = new ProductModel($this->db);
     }

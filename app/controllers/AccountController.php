@@ -1,6 +1,7 @@
 <?php
 require_once('app/config/database.php');
 require_once('app/models/AccountModel.php');
+require_once('app/utils/JWTHandler.php');
 
 class AccountController
 {
@@ -89,18 +90,13 @@ class AccountController
             $_SESSION['username'] = $user->username;
             $_SESSION['user_role'] = $user->role;
 
-            // Tạo mã token JWT giả lập
-            $dummyToken = base64_encode(json_encode([
-                'id' => $user->id,
-                'username' => $user->username,
-                'role' => $user->role,
-                'exp' => time() + 3600
-            ]));
+            // Tạo mã token JWT thực tế bằng thư viện firebase/php-jwt
+            $token = JWTHandler::generateToken($user->id, $user->username, $user->role);
 
             echo json_encode([
                 'success' => true,
                 'message' => 'Đăng nhập thành công!',
-                'token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' . $dummyToken . '.dummySignature',
+                'token' => $token,
                 'user' => [
                     'id' => $user->id,
                     'username' => $user->username,

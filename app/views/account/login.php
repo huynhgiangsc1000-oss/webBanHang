@@ -1,49 +1,65 @@
-<?php include_once 'app/views/shares/header.php'; ?>
-
-<div class="container my-5 d-flex justify-content-center align-items-center" style="min-height: 70vh;">
-    <div class="card border-0 shadow-sm p-4 p-md-5 bg-white" style="border-radius: 20px; width: 100%; max-width: 450px;">
-        
-        <div class="text-center mb-4">
-            <h2 class="fw-bold text-dark mb-1" style="letter-spacing: -0.03rem;">Đăng nhập My Store.</h2>
-            <p class="text-muted small">Quản lý đơn hàng và lưu địa chỉ mua sắm thông minh.</p>
-        </div>
-
-        <?php if (isset($error)): ?>
-            <div class="alert alert-danger border-0 small py-2 rounded-3 text-center mb-3">
-                <i class="fa-solid fa-circle-exclamation me-1"></i> <?php echo $error; ?>
-            </div>
-        <?php endif; ?>
-
-        <form action="/HuynhVanGiang-4733/Account/login" method="POST">
-            
-            <div class="mb-3">
-                <label class="form-label fw-semibold text-secondary small">Tên đăng nhập hoặc Email</label>
-                <input type="text" name="username" class="form-control px-3 py-2.5 rounded-3" 
-                       placeholder="Nhập tên tài khoản của bạn" required 
-                       value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>">
-            </div>
-
-            <div class="mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <label class="form-label fw-semibold text-secondary small mb-0">Mật khẩu</label>
-                    <a href="#" class="text-decoration-none small text-muted">Quên mật khẩu?</a>
-                </div>
-                <input type="password" name="password" class="form-control px-3 py-2.5 rounded-3" 
-                       placeholder="Nhập mật khẩu" required>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100 py-2.5 rounded-pill fw-bold mb-3" style="background-color: #0071e3; border: none;">
-                Đăng nhập
-            </button>
-
-            <div class="text-center mt-4">
-                <span class="text-muted small">Bạn chưa có tài khoản Apple ID? </span>
-                <a href="/HuynhVanGiang-4733/Account/register" class="text-primary text-decoration-none small fw-semibold">
-                    Tạo tài khoản mới ngay
-                </a>
-            </div>
-        </form>
-    </div>
+<?php include 'app/views/shares/header.php'; ?>
+<section class="vh-100 gradient-custom">
+<div class="container py-5 h-100">
+<div class="row d-flex justify-content-center align-items-center h-100">
+<div class="col-12 col-md-8 col-lg-6 col-xl-5">
+<div class="card bg-dark text-white" style="border-radius: 1rem;">
+<div class="card-body p-5 text-center">
+<form id="login-form">
+<div class="mb-md-5 mt-md-4 pb-5">
+<h2 class="fw-bold mb-2 text-uppercase">Login</h2>
+<p class="text-white-50 mb-5">Please enter your login and password!</p>
+<div class="form-outline form-white mb-4">
+<input type="text" name="username" class="form-control form-control-lg" />
+<label class="form-label" for="typeEmailX">UserName</label>
 </div>
-
-<?php include_once 'app/views/shares/footer.php'; ?>
+<div class="form-outline form-white mb-4">
+<input type="password" name="password" class="form-control form-control-lg" />
+<label class="form-label" for="typePasswordX">Password</label>
+</div>
+<p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Forgot password?</a></p>
+<button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
+<div class="d-flex justify-content-center text-center mt-4 pt-1">
+<a href="#!" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+<a href="#!" class="text-white"><i class="fab fa-twitter fa-lg mx-4 px-2"></i></a>
+<a href="#!" class="text-white"><i class="fab fa-google fa-lg"></i></a>
+</div>
+</div>
+<div>
+<p class="mb-0">Don't have an account? <a href="#!" class="text-white-50 fw-bold">Sign Up</a></p>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<?php include 'app/views/shares/footer.php'; ?>
+<script>
+document.getElementById('login-form').addEventListener('submit', function(event) {
+event.preventDefault();
+const basePath = '<?php echo $base_url; ?>';
+const formData = new FormData(this);
+const jsonData = {};
+formData.forEach((value, key) => {
+jsonData[key] = value;
+});
+fetch(basePath + '/account/checkLogin', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify(jsonData)
+})
+.then(response => response.json())
+.then(data => {
+if (data.token) {
+localStorage.setItem('jwtToken', data.token);
+location.href = basePath + '/Product';
+} else {
+alert('Đăng nhập thất bại');
+}
+});
+});
+</script>

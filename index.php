@@ -4,6 +4,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// NẠP COMPOSER AUTOLOADER
+require_once __DIR__ . '/vendor/autoload.php';
+
+
 // 1. Lấy URL hiện tại từ biến $_GET (do .htaccess cấu hình chuyển hướng về)
 $url = $_GET['url'] ?? '';
 $url = rtrim($url, '/');

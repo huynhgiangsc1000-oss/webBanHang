@@ -1,8 +1,9 @@
 <?php
 require_once('app/config/database.php');
 require_once('app/models/ProductModel.php');
+require_once('app/controllers/BaseApiController.php');
 
-class ProductApiController
+class ProductApiController extends BaseApiController
 {
     private $productModel;
     private $db;
@@ -16,16 +17,6 @@ class ProductApiController
         $this->productModel = new ProductModel($this->db);
     }
 
-    /**
-     * Hàm trợ giúp: Trả về JSON và kết thúc
-     */
-    private function json($data, $status = 200)
-    {
-        http_response_code($status);
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        exit();
-    }
 
     /**
      * GET /ProductApi/index
@@ -33,6 +24,9 @@ class ProductApiController
      */
     public function index()
     {
+        // Yêu cầu xác thực JWT cho người dùng đã đăng nhập
+        $this->protect();
+
         $products = $this->productModel->getProducts();
         $this->json([
             'success' => true,
@@ -46,6 +40,9 @@ class ProductApiController
      */
     public function show($id)
     {
+        // Yêu cầu xác thực JWT cho người dùng đã đăng nhập
+        $this->protect();
+
         $product = $this->productModel->getProductById($id);
         if (!$product) {
             $this->json([
@@ -66,6 +63,9 @@ class ProductApiController
      */
     public function store()
     {
+        // Yêu cầu xác thực JWT với vai trò admin
+        $this->protect('admin');
+
         // Đọc dữ liệu JSON từ request body
         $body = json_decode(file_get_contents('php://input'), true);
 
@@ -105,6 +105,9 @@ class ProductApiController
      */
     public function update($id)
     {
+        // Yêu cầu xác thực JWT với vai trò admin
+        $this->protect('admin');
+
         $product = $this->productModel->getProductById($id);
         if (!$product) {
             $this->json([
@@ -151,6 +154,9 @@ class ProductApiController
      */
     public function destroy($id)
     {
+        // Yêu cầu xác thực JWT với vai trò admin
+        $this->protect('admin');
+
         $product = $this->productModel->getProductById($id);
         if (!$product) {
             $this->json([

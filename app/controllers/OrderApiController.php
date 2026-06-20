@@ -2,8 +2,9 @@
 require_once('app/config/database.php');
 require_once('app/models/OrderModel.php');
 require_once('app/models/ProductModel.php');
+require_once('app/controllers/BaseApiController.php');
 
-class OrderApiController
+class OrderApiController extends BaseApiController
 {
     private $orderModel;
     private $productModel;
@@ -19,16 +20,6 @@ class OrderApiController
         $this->productModel = new ProductModel($this->db);
     }
 
-    /**
-     * Hàm trợ giúp: Trả về JSON và kết thúc
-     */
-    private function json($data, $status = 200)
-    {
-        http_response_code($status);
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        exit();
-    }
 
     /**
      * GET /api/orders/{id}
@@ -36,6 +27,9 @@ class OrderApiController
      */
     public function show($id)
     {
+        // Yêu cầu xác thực JWT
+        $this->protect();
+
         $order = $this->orderModel->getOrderById($id);
         if (!$order) {
             $this->json([
@@ -70,6 +64,9 @@ class OrderApiController
      */
     public function store()
     {
+        // Yêu cầu xác thực JWT
+        $user = $this->protect();
+
         $body = json_decode(file_get_contents('php://input'), true);
 
         if (!$body) {
@@ -118,8 +115,8 @@ class OrderApiController
             ];
         }
 
-        // Lấy user_id hiện tại từ Session (nếu có, không thì dùng mặc định là 1 để test Postman)
-        $user_id = $_SESSION['user_id'] ?? 1;
+        // Lấy user_id thực tế từ payload JWT đã xác thực
+        $user_id = $user->id;
 
         $success = $this->orderModel->createOrder($shipping_name, $shipping_phone, $shipping_address, $cart, $user_id);
 
@@ -142,6 +139,9 @@ class OrderApiController
      */
     public function update($id)
     {
+        // Yêu cầu xác thực JWT
+        $this->protect();
+
         $order = $this->orderModel->getOrderById($id);
         if (!$order) {
             $this->json([

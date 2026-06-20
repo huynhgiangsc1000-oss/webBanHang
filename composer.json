@@ -1,0 +1,7 @@
+{
+    "name": "huynhgiangsc1000-oss/webbanhang",
+    "description": "Bảo mật RESTful API bằng JWT với firebase/php-jwt",
+    "require": {
+        "firebase/php-jwt": "^6.0"
+    }
+}
